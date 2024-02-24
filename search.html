@@ -4,20 +4,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Search</title>
+    <style>
+        body {
+         background-color: tan;
+         margin: 0;
+         padding: 0;
+         font-family: Arial, sans-serif;
+         position: relative; 
+     }
+
+     header {
+
+         color: black;
+         padding: 10px;
+         text-align: left;
+     }
+
+     label, input, button {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+
+     #main-content {
+         text-align: center;
+         padding: 20px;
+     }
+
+     #top-right-links {
+         position: absolute;
+         top: 10px;
+         right: 10px;
+     }
+
+     a {
+         color: black;
+         text-decoration: none;
+         margin-right: 40px;
+     }
+
+     a:hover {
+         text-decoration: underline;
+     }
+ </style>
 </head>
 
 <body>
+    <header>
+        <h1>Guitar Inventory Management</h1>
+    </header>
+    <div id="main-content">
+        <div id="top-right-links">
+            <a href= "index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="add.html">Add</a>
+        </div>
+    </div>
+    <label>Builder: </label>
+    <input id="builder" />
+    <br />
+
+    <label>Model: </label>
+    <input id="model" />
+    <br />
+
     <label>Type: </label>
     <input id="type" />
+    <br />
+
+    <label>Back Wood: </label>
+    <input id="backWood" />
+    <br />
+
+    <label>Top Wood: </label>
+    <input id="topWood" />
+    <br />
+
     <button onclick="search()">Search</button>
     <br />
 
     <table>
         <thead>
             <tr>
-                <th>Id</th>
+                <th>Serial Number</th>
+                <th>Price</th>
+                <th>Builder</th>
+                <th>Model</th>
                 <th>Type</th>
+                <th>Back Wood</th>
+                <th>Top Wood</th>
             </tr>
         </thead>
         <tbody id="searchResult">
@@ -26,35 +102,44 @@
     </table>
 
     <script>
-        let ducks = [
-            { id: 1, type: 'Mallard' },
-            { id: 2, type: 'Redhead' },
-            { id: 3, type: 'Decoy' },
-            { id: 4, type: 'Redhead' },
-            { id: 5, type: 'Redhead' },
-            { id: 6, type: 'Mallard' },
+        let guitars = [
+            { serialNumber: '100', price: 100, builder: 'Fender', model: 'New', type: 'Electric', backWood: 'Alder', topWood: 'Maple' },
+            { serialNumber: '101', price: 2000, builder: 'Gibson', model: 'Newest', type: 'Electric', backWood: 'Mahogany', topWood: 'Maple' },
+            { serialNumber: '102', price: 300, builder: 'Martin', model: 'Old', type: 'Acoustic', backWood: 'Rosewood', topWood: 'Spruce' },
+            { serialNumber: '1003', price: 9000, builder: 'Taylor', model: 'New', type: 'Acoustic', backWood: 'Rosewood', topWood: 'Adirondack' },
+            { serialNumber: '104', price: 20, builder: 'PRS', model: 'Oldest', type: 'Electric', backWood: 'Mahogany', topWood: 'Maple' }
         ];
 
         function search() {
-            let duckType = document.getElementById("type").value.toLowerCase();
+            let builder = document.getElementById("builder").value.toLowerCase();
+            let model = document.getElementById("model").value.toLowerCase();
+            let type = document.getElementById("type").value.toLowerCase();
+            let backWood = document.getElementById("backWood").value.toLowerCase();
+            let topWood = document.getElementById("topWood").value.toLowerCase();
+
             let table = document.getElementById("searchResult");
             table.innerHTML = "";
-            for (let duck of ducks) {
-                if (!duckType || duck.type.toLowerCase() === duckType) {
+
+            for (let guitar of guitars) {
+                if (
+                    (builder === '' || guitar.builder.toLowerCase().includes(builder)) &&
+                    (model === '' || guitar.model.toLowerCase().includes(model)) &&
+                    (type === '' || guitar.type.toLowerCase().includes(type)) &&
+                    (backWood === '' || guitar.backWood.toLowerCase().includes(backWood)) &&
+                    (topWood === '' || guitar.topWood.toLowerCase().includes(topWood))
+                ) {
                     let row = document.createElement("tr");
-                    let cell1 = document.createElement("td");
-                    let cell2 = document.createElement("td");
-                    let id = document.createTextNode(duck.id);
-                    let type = document.createTextNode(duck.type);
-                    cell1.appendChild(id);
-                    cell2.appendChild(type);
-                    row.appendChild(cell1);
-                    row.appendChild(cell2);
+                    let cells = Object.values(guitar);
+                    cells.forEach(cellValue => {
+                        let cell = document.createElement("td");
+                        let textNode = document.createTextNode(cellValue);
+                        cell.appendChild(textNode);
+                        row.appendChild(cell);
+                    });
                     table.appendChild(row);
                 }
             }
         }
     </script>
 </body>
-
 </html>
