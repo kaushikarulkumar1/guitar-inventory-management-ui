@@ -102,44 +102,40 @@
     </table>
 
     <script>
-        let guitars = [
-            { serialNumber: '100', price: 100, builder: 'Fender', model: 'New', type: 'Electric', backWood: 'Alder', topWood: 'Maple' },
-            { serialNumber: '101', price: 2000, builder: 'Gibson', model: 'Newest', type: 'Electric', backWood: 'Mahogany', topWood: 'Maple' },
-            { serialNumber: '102', price: 300, builder: 'Martin', model: 'Old', type: 'Acoustic', backWood: 'Rosewood', topWood: 'Spruce' },
-            { serialNumber: '1003', price: 9000, builder: 'Taylor', model: 'New', type: 'Acoustic', backWood: 'Rosewood', topWood: 'Adirondack' },
-            { serialNumber: '104', price: 20, builder: 'PRS', model: 'Oldest', type: 'Electric', backWood: 'Mahogany', topWood: 'Maple' }
-        ];
+       let Guitars = [];
 
-        function search() {
-            let builder = document.getElementById("builder").value.toLowerCase();
-            let model = document.getElementById("model").value.toLowerCase();
-            let type = document.getElementById("type").value.toLowerCase();
-            let backWood = document.getElementById("backWood").value.toLowerCase();
-            let topWood = document.getElementById("topWood").value.toLowerCase();
+async function getAll() {
+    let response = await fetch("http://localhost:8080/Guitars");
+    let data = await response.json();
+    return data;
+}
 
-            let table = document.getElementById("searchResult");
-            table.innerHTML = "";
 
-            for (let guitar of guitars) {
-                if (
-                    (builder === '' || guitar.builder.toLowerCase().includes(builder)) &&
-                    (model === '' || guitar.model.toLowerCase().includes(model)) &&
-                    (type === '' || guitar.type.toLowerCase().includes(type)) &&
-                    (backWood === '' || guitar.backWood.toLowerCase().includes(backWood)) &&
-                    (topWood === '' || guitar.topWood.toLowerCase().includes(topWood))
-                ) {
-                    let row = document.createElement("tr");
-                    let cells = Object.values(guitar);
-                    cells.forEach(cellValue => {
-                        let cell = document.createElement("td");
-                        let textNode = document.createTextNode(cellValue);
-                        cell.appendChild(textNode);
-                        row.appendChild(cell);
-                    });
-                    table.appendChild(row);
-                }
+    async function search() {
+
+        if (Guitars.length == 0) {
+            Guitars = await getAll();
+        }
+
+        let GuitarType = document.getElementById("type").value;
+        let table = document.getElementById("result");
+        table.innerHTML = "";
+
+        for (let Guitar of Guitars) {
+            if (!GuitarType || Guitar.type.toLowerCase() == GuitarType.toLowerCase()) {
+                let row = document.createElement("tr");
+                let cell1 = document.createElement("td");
+                let id = document.createTextNode(Guitar.id);
+                cell1.appendChild(id);
+                row.appendChild(cell1);
+                let cell2 = document.createElement("td");
+                let type = document.createTextNode(Guitar.type);
+                cell2.appendChild(type);
+                row.appendChild(cell2);
+                table.appendChild(row);
             }
         }
+    }
     </script>
 </body>
 </html>
